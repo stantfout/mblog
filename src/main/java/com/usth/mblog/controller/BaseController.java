@@ -9,6 +9,9 @@ import org.springframework.web.bind.ServletRequestUtils;
 
 import javax.servlet.http.HttpServletRequest;
 
+/**
+ * 整合一些Controller公共的变量和方法
+ */
 @Controller
 public class BaseController {
 

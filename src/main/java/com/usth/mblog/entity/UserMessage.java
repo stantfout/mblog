@@ -17,7 +17,7 @@ import lombok.EqualsAndHashCode;
  */
 @Data
 @EqualsAndHashCode(callSuper = false)
-public class UserMessage implements Serializable {
+public class UserMessage extends BaseEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
 

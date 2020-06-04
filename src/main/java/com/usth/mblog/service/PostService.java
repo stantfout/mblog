@@ -29,5 +29,30 @@ public interface PostService extends IService<Post> {
      */
     IPage<PostVo> paging(Page page, Long categoryId, Long userId, Integer level, Boolean recommend, String created);
 
+    /**
+     * 根据条件获取单个页面
+     * @param wrapper 条件
+     * @return
+     */
     PostVo selectOnePost(QueryWrapper<Post> wrapper);
+
+    /**
+     * 本周热议初始化
+     */
+    void initWeekRank();
+
+    /**
+     * 评论文章后的操作
+     * @param postId 文章Id
+     * @param isIncr 增加/减少评论
+     */
+    void incrCommentCountAndUnionForWeekRank(long postId, boolean isIncr);
+
+    /**
+     * 设置文章浏览量
+     * @param vo
+     */
+    void putViewCount(PostVo vo);
+
+    void updateWeekRank();
 }

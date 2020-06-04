@@ -21,6 +21,6 @@ import org.springframework.stereotype.Component;
 @Component
 public interface CommentMapper extends BaseMapper<Comment> {
 
-
+    //获取分页的评论信息
     IPage<CommentVo> selectComments(Page page, @Param(Constants.WRAPPER) QueryWrapper<Comment> wrapper);
 }

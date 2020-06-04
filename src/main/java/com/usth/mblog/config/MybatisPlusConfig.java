@@ -7,12 +7,16 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
-//Spring boot方式
+
 @EnableTransactionManagement
 @Configuration
 @MapperScan("com.usth.mblog.mapper")
 public class MybatisPlusConfig {
 
+    /**
+     * 分页的Config配置
+     * @return
+     */
     @Bean
     public PaginationInterceptor paginationInterceptor() {
         PaginationInterceptor paginationInterceptor = new PaginationInterceptor();

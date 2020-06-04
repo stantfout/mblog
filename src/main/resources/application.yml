@@ -11,7 +11,10 @@ spring:
     cache: false
     template-loader-path: classpath:/templates/
     charset: UTF-8
-
+  redis:
+    host: localhost
+    port: 6379
+    database: 2
 logging:
   level:
     com.usth.mblog.mapper: debug
