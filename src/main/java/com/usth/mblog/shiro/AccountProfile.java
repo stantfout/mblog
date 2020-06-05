@@ -12,11 +12,14 @@ import java.util.Date;
 public class AccountProfile implements Serializable {
 
     private Long id;
-
     private String username;
     private String email;
     private String avatar;
     private String sign;
-
+    private String gender;
     private Date created;
+
+    public String getSex() {
+        return gender.equals("0") ? "男" : "女";
+    }
 }

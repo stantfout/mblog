@@ -45,6 +45,9 @@ public class UserMessage extends BaseEntity implements Serializable {
 
     /**
      * 消息类型
+     * 0 系统消息
+     * 1 评论文章
+     * 2 回复评论
      */
     private Integer type;
 

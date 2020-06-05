@@ -3,6 +3,7 @@ package com.usth.mblog.controller;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.usth.mblog.service.CommentService;
 import com.usth.mblog.service.PostService;
+import com.usth.mblog.service.UserMessageService;
 import com.usth.mblog.service.UserService;
 import com.usth.mblog.shiro.AccountProfile;
 import org.apache.shiro.SecurityUtils;
@@ -29,6 +30,9 @@ public class BaseController {
 
     @Autowired
     UserService userService;
+
+    @Autowired
+    UserMessageService messageService;
 
     public Page getPage() {
         //获取当前分页，通过ServletRequestUtils当获取不到时默认为1

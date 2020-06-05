@@ -1,6 +1,7 @@
 package com.usth.mblog.shiro;
 
 import com.usth.mblog.service.UserService;
+import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.*;
 import org.apache.shiro.authz.AuthorizationInfo;
 import org.apache.shiro.realm.AuthorizingRealm;
@@ -34,6 +35,8 @@ public class AccountRealm extends AuthorizingRealm {
     protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken token) throws AuthenticationException {
         UsernamePasswordToken UsernamePasswordToken = (UsernamePasswordToken) token;
         AccountProfile profile = userService.login(UsernamePasswordToken.getUsername(), String.valueOf(UsernamePasswordToken.getPassword()));
+
+        SecurityUtils.getSubject().getSession().setAttribute("profile",profile);
 
         SimpleAuthenticationInfo info = new SimpleAuthenticationInfo(profile,token.getCredentials(),getName());
         return info;
