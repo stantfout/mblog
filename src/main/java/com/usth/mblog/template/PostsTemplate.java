@@ -9,6 +9,9 @@ import com.usth.mblog.vo.PostVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+/**
+ * 文章分页信息
+ */
 @Component
 public class PostsTemplate extends TemplateDirective {
 

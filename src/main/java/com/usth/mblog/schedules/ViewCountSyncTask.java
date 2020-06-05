@@ -9,20 +9,19 @@ import com.usth.mblog.entity.Post;
 import com.usth.mblog.service.PostService;
 import com.usth.mblog.util.RedisKeyUtil;
 import com.usth.mblog.util.RedisUtil;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import java.util.Set;
 
+@Slf4j
 @Component
 public class ViewCountSyncTask {
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(PostController.class);
     @Autowired
     RedisUtil redisUtil;
 
@@ -32,7 +31,10 @@ public class ViewCountSyncTask {
     @Autowired
     PostService postService;
 
-    @Scheduled(cron = "0 59 23 * * *")
+    /**
+     * 定时任务：每12小时同步一次redis和mysql中文章点击量信息
+     */
+    @Scheduled(cron = "0 0 0/12 * * *")
     public void task() {
         Set<String> keys = redisTemplate.keys(RedisKeyUtil.getPostKey("*"));
         if (keys == null) {
@@ -45,7 +47,8 @@ public class ViewCountSyncTask {
                 postService.update(new UpdateWrapper<Post>()
                         .eq("id",id)
                         .set("view_count", viewCount));
-                LOGGER.info(DateUtil.format(new Date(), DatePattern.NORM_DATETIME_PATTERN) +
+                redisUtil.del(key);
+                log.info(DateUtil.format(new Date(), DatePattern.NORM_DATETIME_PATTERN) +
                         "---Post:" + id + " ---------------------> " + "更新成功");
             }
         }

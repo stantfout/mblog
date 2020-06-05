@@ -1,7 +1,9 @@
 package com.usth.mblog.service;
 
+import com.usth.mblog.common.lang.Result;
 import com.usth.mblog.entity.User;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.usth.mblog.shiro.AccountProfile;
 
 /**
  * <p>
@@ -13,4 +15,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface UserService extends IService<User> {
 
+    Result register(User user);
+
+    AccountProfile login(String email, String password);
 }

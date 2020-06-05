@@ -13,6 +13,9 @@ import org.springframework.web.context.ServletContextAware;
 import javax.servlet.ServletContext;
 import java.util.List;
 
+/**
+ * 初始化
+ */
 @Component
 public class ContextStartup implements ApplicationRunner, ServletContextAware {
 

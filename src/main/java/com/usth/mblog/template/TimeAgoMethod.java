@@ -7,6 +7,9 @@ import org.springframework.stereotype.Component;
 import java.util.Date;
 import java.util.List;
 
+/**
+ * 时间显示标签
+ */
 @Component
 public class TimeAgoMethod extends DirectiveHandler.BaseMethod {
     private static final long ONE_MINUTE = 60000L;

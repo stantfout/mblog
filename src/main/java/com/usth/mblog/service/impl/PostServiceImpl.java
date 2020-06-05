@@ -73,7 +73,7 @@ public class PostServiceImpl extends ServiceImpl<PostMapper, Post> implements Po
             long expireTime = (7 - DateUtil.between(new Date(), post.getCreated(), DateUnit.DAY)) * 24 * 60 * 60;
             redisUtil.expire(key,expireTime);
             // 缓存文章的一些基本信息
-            this.hashCachePostIdAndTitle(post,expireTime);
+            this.hashCachePostIdAndTitle(post);
         }
         //做并集
         this.zunionAndStoreLast7DayForWeekRank();
@@ -91,11 +91,10 @@ public class PostServiceImpl extends ServiceImpl<PostMapper, Post> implements Po
         //如果redis没有缓存这篇文章的信息，缓存文章信息
         String key = RedisKeyUtil.getPostKey(postId);
         if (!redisUtil.hasKey(key)) {
-            long expireTime = 7 * 24 * 60 * 60;
             Post post = this.getById(postId);
-            redisUtil.hset(key,RedisKeyUtil.getPostIdKey(),post.getId(), expireTime);
-            redisUtil.hset(key,RedisKeyUtil.getPostTitleKey(),post.getTitle(), expireTime);
-            redisUtil.hset(key,RedisKeyUtil.getPostViewCountKey(),post.getViewCount(), expireTime);
+            redisUtil.hset(key,RedisKeyUtil.getPostIdKey(),post.getId());
+            redisUtil.hset(key,RedisKeyUtil.getPostTitleKey(),post.getTitle());
+            redisUtil.hset(key,RedisKeyUtil.getPostViewCountKey(),post.getViewCount());
         }
 
     }
@@ -140,14 +139,13 @@ public class PostServiceImpl extends ServiceImpl<PostMapper, Post> implements Po
     /**
      * 缓存文章的基本信息
      * @param post
-     * @param expireTime
      */
-    private void hashCachePostIdAndTitle(Post post, long expireTime) {
+    private void hashCachePostIdAndTitle(Post post) {
         String key = RedisKeyUtil.getPostKey(post.getId());
         if (!redisUtil.hasKey(key)) {
-            redisUtil.hset(key,RedisKeyUtil.getPostIdKey(),post.getId(), expireTime);
-            redisUtil.hset(key,RedisKeyUtil.getPostTitleKey(),post.getTitle(), expireTime);
-            redisUtil.hset(key,RedisKeyUtil.getPostViewCountKey(),post.getViewCount(), expireTime);
+            redisUtil.hset(key,RedisKeyUtil.getPostIdKey(),post.getId());
+            redisUtil.hset(key,RedisKeyUtil.getPostTitleKey(),post.getTitle());
+            redisUtil.hset(key,RedisKeyUtil.getPostViewCountKey(),post.getViewCount());
         }
     }
 }

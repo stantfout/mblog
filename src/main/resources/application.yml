@@ -18,3 +18,7 @@ spring:
 logging:
   level:
     com.usth.mblog.mapper: debug
+
+file:
+  upload:
+    dir: ${user.dir}/upload
