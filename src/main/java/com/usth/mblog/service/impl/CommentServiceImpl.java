@@ -30,6 +30,7 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
         return CommentMapper.selectComments(page,new QueryWrapper<Comment>()
                 .eq(postId != null, "post_id",postId)
                 .eq(userId != null, "user_id",userId)
-                .orderByDesc(order != null, order));
+                .eq("c.status",0)
+                .orderByAsc(order != null, order));
     }
 }

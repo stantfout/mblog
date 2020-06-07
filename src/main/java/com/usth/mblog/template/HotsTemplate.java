@@ -1,7 +1,10 @@
 package com.usth.mblog.template;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.usth.mblog.common.templates.DirectiveHandler;
 import com.usth.mblog.common.templates.TemplateDirective;
+import com.usth.mblog.entity.Post;
+import com.usth.mblog.service.PostService;
 import com.usth.mblog.util.RedisKeyUtil;
 import com.usth.mblog.util.RedisUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +21,9 @@ public class HotsTemplate extends TemplateDirective {
 
     @Autowired
     RedisUtil redisUtil;
+
+    @Autowired
+    PostService postService;
 
     @Override
     public String getName() {
@@ -39,7 +45,15 @@ public class HotsTemplate extends TemplateDirective {
             String postKey = RedisKeyUtil.getPostKey(value);
 
             map.put("id", value);
-            map.put("title", redisUtil.hget(postKey, RedisKeyUtil.getPostTitleKey()));
+            if (redisUtil.hHasKey(postKey,RedisKeyUtil.getPostTitleKey())) {
+                map.put("title", redisUtil.hget(postKey, RedisKeyUtil.getPostTitleKey()));
+            } else {
+                Post post = postService.getOne(new QueryWrapper<Post>()
+                        .select("title")
+                        .eq("id", value));
+                map.put("title",post.getTitle());
+                redisUtil.hset(postKey,RedisKeyUtil.getPostTitleKey(),post.getTitle());
+            }
             map.put("commentCount", typedTuple.getScore());
 
             hotPosts.add(map);

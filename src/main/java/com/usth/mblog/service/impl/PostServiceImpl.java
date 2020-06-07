@@ -13,6 +13,8 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.usth.mblog.util.RedisKeyUtil;
 import com.usth.mblog.util.RedisUtil;
 import com.usth.mblog.vo.PostVo;
+import javafx.geometry.Pos;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -28,6 +30,7 @@ import java.util.List;
  * @author wwb
  * @since 2020-06-03
  */
+@Slf4j
 @Service
 public class PostServiceImpl extends ServiceImpl<PostMapper, Post> implements PostService {
 
@@ -48,6 +51,7 @@ public class PostServiceImpl extends ServiceImpl<PostMapper, Post> implements Po
                 .eq(categoryId != null, "category_id", categoryId)
                 .eq(userId != null, "user_id", userId)
                 .eq(level == 0, "level", 0)
+                .eq("p.status",0)
                 .gt(level > 0, "level", 0)
                 .orderByDesc(order != null, order);
         return postMapper.selectPosts(page,wrapper);
@@ -63,6 +67,7 @@ public class PostServiceImpl extends ServiceImpl<PostMapper, Post> implements Po
 
         //获取7天的文章
         List<Post> posts = this.list(new QueryWrapper<Post>()
+                .eq("status",0)
                 .ge("created", DateUtil.lastWeek())
                 .select("id","title","comment_count","view_count","user_id","created"));
         //初始化文章的总评论数
@@ -92,6 +97,7 @@ public class PostServiceImpl extends ServiceImpl<PostMapper, Post> implements Po
         String key = RedisKeyUtil.getPostKey(postId);
         if (!redisUtil.hasKey(key)) {
             Post post = this.getById(postId);
+            log.info(post.toString());
             redisUtil.hset(key,RedisKeyUtil.getPostIdKey(),post.getId());
             redisUtil.hset(key,RedisKeyUtil.getPostTitleKey(),post.getTitle());
             redisUtil.hset(key,RedisKeyUtil.getPostViewCountKey(),post.getViewCount());

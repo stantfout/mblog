@@ -38,6 +38,7 @@ public class UserController extends BaseController{
 
         List<Post> posts = postService.list(new QueryWrapper<Post>()
                 .eq("user_id", user.getId())
+                .eq("status",0)
                 .gt("created", DateUtil.offsetDay(new Date(), -30))
                 .orderByDesc("created"));
         request.setAttribute("user", user);
@@ -129,6 +130,7 @@ public class UserController extends BaseController{
     public Result userPublic() {
         IPage page = postService.page(getPage(), new QueryWrapper<Post>()
                 .eq("user_id", getProfileId())
+                .eq("status",0)
                 .orderByDesc("created"));
 
         return Result.success(page);
@@ -138,7 +140,8 @@ public class UserController extends BaseController{
     @ResponseBody
     public Result userCollection() {
         IPage page = postService.page(getPage(), new QueryWrapper<Post>()
-                .inSql("id","select post_id from user_collection where user_id = " + getProfileId()));
+                .inSql("id","select post_id from user_collection where user_id = " + getProfileId())
+                .eq("status",0));
 
         return Result.success(page);
     }
@@ -149,7 +152,7 @@ public class UserController extends BaseController{
         IPage<UserMessageVo> page = messageService.paging(getPage(),new QueryWrapper<UserMessage>()
                 .eq("to_user_id",getProfileId())
                 .eq("status",0)
-                .orderByAsc("created"));
+                .orderByDesc("created"));
         request.setAttribute("pageData",page);
         return "user/message";
     }
@@ -160,6 +163,7 @@ public class UserController extends BaseController{
 
         List<Post> posts = postService.list(new QueryWrapper<Post>()
                 .eq("user_id", user.getId())
+                .eq("status",0)
                 .gt("created", DateUtil.offsetDay(new Date(), -30))
                 .orderByDesc("created"));
         request.setAttribute("user", user);
@@ -169,7 +173,7 @@ public class UserController extends BaseController{
 
     @PostMapping("/message/remove")
     @ResponseBody
-    public Result msgRemove(@RequestParam(defaultValue = "0") Long id,@RequestParam(defaultValue = "false") Boolean all) {
+    public Result messageRemove(@RequestParam(defaultValue = "0") Long id,@RequestParam(defaultValue = "false") Boolean all) {
         boolean res = messageService.update(new UpdateWrapper<UserMessage>()
                 .eq("to_user_id", getProfileId())
                 .eq(!all, "id", id)
@@ -179,7 +183,7 @@ public class UserController extends BaseController{
 
     @ResponseBody
     @RequestMapping("/message/nums")
-    public Map msgNums() {
+    public Map messageNums() {
         int count = messageService.count(new QueryWrapper<UserMessage>()
                 .eq("to_user_id", getProfileId())
                 .eq("status", "0"));

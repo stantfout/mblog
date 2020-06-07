@@ -1,11 +1,9 @@
 package com.usth.mblog.controller;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.usth.mblog.service.CommentService;
-import com.usth.mblog.service.PostService;
-import com.usth.mblog.service.UserMessageService;
-import com.usth.mblog.service.UserService;
+import com.usth.mblog.service.*;
 import com.usth.mblog.shiro.AccountProfile;
+import com.usth.mblog.util.RedisUtil;
 import org.apache.shiro.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -18,6 +16,8 @@ import javax.servlet.http.HttpServletRequest;
  */
 @Controller
 public class BaseController {
+
+    static final String KAPTCHA_SESSION_KEY = "KAPTCHA_SESSION_KEY";
 
     @Autowired
     HttpServletRequest request;
@@ -33,6 +33,15 @@ public class BaseController {
 
     @Autowired
     UserMessageService messageService;
+
+    @Autowired
+    UserCollectionService collectionService;
+
+    @Autowired
+    CategoryService categoryService;
+
+    @Autowired
+    WsService wsService;
 
     public Page getPage() {
         //获取当前分页，通过ServletRequestUtils当获取不到时默认为1

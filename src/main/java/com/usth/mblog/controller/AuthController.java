@@ -24,8 +24,6 @@ import java.io.IOException;
 @Controller
 public class AuthController extends BaseController {
 
-    private static final String KAPTCHA_SESSION_KEY = "KAPTCHA_SESSION_KEY";
-
     @Autowired
     Producer producer;
 
