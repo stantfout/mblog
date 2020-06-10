@@ -24,10 +24,10 @@ public interface PostService extends IService<Post> {
      * @param userId 用户Id
      * @param level 置顶
      * @param recommend 精选
-     * @param created 排序
+     * @param order 排序
      * @return
      */
-    IPage<PostVo> paging(Page page, Long categoryId, Long userId, Integer level, Boolean recommend, String created);
+    IPage<PostVo> paging(Page page, Long categoryId, Long userId, Integer level, Boolean recommend, String order);
 
     /**
      * 根据条件获取单个页面

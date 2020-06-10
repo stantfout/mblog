@@ -5,7 +5,9 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.usth.mblog.common.lang.Result;
+import com.usth.mblog.config.RabbitConfig;
 import com.usth.mblog.entity.*;
+import com.usth.mblog.search.mq.PostMqIndexMessage;
 import com.usth.mblog.service.UserService;
 import com.usth.mblog.util.ValidationUtil;
 import com.usth.mblog.vo.CommentVo;
@@ -28,14 +30,19 @@ import java.util.Date;
 public class PostController extends BaseController {
 
     @GetMapping("/category/{id:\\d*}")
-    public String category(@PathVariable Long id) {
+    public String category(@PathVariable Long id,
+                           @RequestParam(defaultValue = "created")String order,
+                           @RequestParam(defaultValue = "0")Integer recommend) {
+        Boolean flag = recommend == 1 ? true : null;
         //设置当前页面的分类id，用于前端高亮显示
         request.setAttribute("currentCategoryId",id);
 
         //根据分类获取分页的文章信息
-        IPage<PostVo> results = postService.paging(getPage(),id,null,null,null,"created");
+        IPage<PostVo> results = postService.paging(getPage(),id,null,null,flag,order);
 
         request.setAttribute("pageData",results);
+        request.setAttribute("order",order);
+        request.setAttribute("recommend",recommend);
         return "post/category";
     }
 
@@ -161,6 +168,9 @@ public class PostController extends BaseController {
             postService.updateById(tempPost);
         }
 
+        //发送消息给MQ，告知更新或添加
+        amqpTemplate.convertAndSend(RabbitConfig.es_exchange, RabbitConfig.es_bind_key,new PostMqIndexMessage(post.getId(),PostMqIndexMessage.CREATE_OR_UPDATE));
+
         return Result.success().action("/post/"+post.getId());
     }
 
@@ -182,6 +192,11 @@ public class PostController extends BaseController {
         messageService.update(new UpdateWrapper<UserMessage>()
                 .eq("post_id",id)
                 .set("status",1));
+
+        //发送消息给MQ，告知删除
+        amqpTemplate.convertAndSend(RabbitConfig.es_exchange, RabbitConfig.es_bind_key,
+                new PostMqIndexMessage(post.getId(),PostMqIndexMessage.REMOVE));
+
 
         return Result.success().action("/user/index");
     }

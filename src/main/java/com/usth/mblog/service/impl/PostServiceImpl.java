@@ -50,8 +50,9 @@ public class PostServiceImpl extends ServiceImpl<PostMapper, Post> implements Po
         QueryWrapper wrapper = new QueryWrapper<Post>()
                 .eq(categoryId != null, "category_id", categoryId)
                 .eq(userId != null, "user_id", userId)
-                .eq(level == 0, "level", 0)
                 .eq("p.status",0)
+                .eq(level == 0, "level", 0)
+                .eq(recommend != null,"recommend",1)
                 .gt(level > 0, "level", 0)
                 .orderByDesc(order != null, order);
         return postMapper.selectPosts(page,wrapper);

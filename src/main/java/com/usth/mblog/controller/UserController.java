@@ -1,4 +1,5 @@
 package com.usth.mblog.controller;
+import	java.util.ArrayList;
 
 import java.io.IOException;
 import	java.util.Date;
@@ -13,11 +14,14 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.usth.mblog.common.lang.Result;
+import com.usth.mblog.entity.Comment;
 import com.usth.mblog.entity.Post;
 import com.usth.mblog.entity.User;
 import com.usth.mblog.entity.UserMessage;
 import com.usth.mblog.shiro.AccountProfile;
+import com.usth.mblog.util.RedisUtil;
 import com.usth.mblog.util.UploadUtil;
+import com.usth.mblog.vo.CommentVo;
 import com.usth.mblog.vo.UserMessageVo;
 import org.apache.shiro.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,10 +43,17 @@ public class UserController extends BaseController{
         List<Post> posts = postService.list(new QueryWrapper<Post>()
                 .eq("user_id", user.getId())
                 .eq("status",0)
-                .gt("created", DateUtil.offsetDay(new Date(), -30))
+                .gt("created", DateUtil.offsetDay(new Date(), -7))
                 .orderByDesc("created"));
+        List<CommentVo> comments = commentService.commentList(new QueryWrapper<Comment>()
+                .eq("user_id", user.getId())
+                .eq("status", 0)
+                .gt("created", DateUtil.offsetDay(new Date(), -7))
+                .orderByDesc("created"));
+
         request.setAttribute("user", user);
         request.setAttribute("posts", posts);
+        request.setAttribute("comments", comments);
         return "user/home";
     }
 

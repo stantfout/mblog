@@ -2,10 +2,15 @@ package com.usth.mblog.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.usth.mblog.common.lang.Result;
+import com.usth.mblog.config.RabbitConfig;
 import com.usth.mblog.entity.Comment;
 import com.usth.mblog.entity.Post;
 import com.usth.mblog.entity.UserMessage;
+import com.usth.mblog.search.mq.PostMqIndexMessage;
+import com.usth.mblog.vo.PostVo;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
@@ -133,6 +138,10 @@ public class AdminController extends BaseController {
                 .eq("post_id",post.getId())
                 .set("status",1));
 
+        //发送消息给MQ，告知删除
+        amqpTemplate.convertAndSend(RabbitConfig.es_exchange, RabbitConfig.es_bind_key,
+                new PostMqIndexMessage(post.getId(),PostMqIndexMessage.REMOVE));
+
         return Result.success();
     }
 
@@ -146,6 +155,33 @@ public class AdminController extends BaseController {
         post.setRecommend(rank == 1);
         postService.updateById(post);
         return Result.success();
+    }
+
+    @PostMapping("/initEsData")
+    @ResponseBody
+    public Result initEsData() {
+
+        int size = 10000;
+        Page page = new Page<>();
+        page.setSize(size);
+
+        long total = 0;
+
+        for (int i = 1; i < 1000; i++) {
+            page.setCurrent(i);
+
+            IPage<PostVo> paging = postService.paging(page, null, null, null, null, null);
+
+            int num = searchService.initEsData(paging.getRecords());
+
+            total += num;
+
+            if (paging.getRecords().size() < size) {
+                break;
+            }
+        }
+
+        return Result.success("ES索引初始化成功，共" + total + "条");
     }
 
 }

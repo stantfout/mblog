@@ -5,6 +5,7 @@ import com.usth.mblog.service.*;
 import com.usth.mblog.shiro.AccountProfile;
 import com.usth.mblog.util.RedisUtil;
 import org.apache.shiro.SecurityUtils;
+import org.springframework.amqp.core.AmqpTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.ServletRequestUtils;
@@ -42,6 +43,12 @@ public class BaseController {
 
     @Autowired
     WsService wsService;
+
+    @Autowired
+    SearchService searchService;
+
+    @Autowired
+    AmqpTemplate amqpTemplate;
 
     public Page getPage() {
         //获取当前分页，通过ServletRequestUtils当获取不到时默认为1

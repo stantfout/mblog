@@ -24,17 +24,17 @@
       <div class="fly-panel" style="margin-bottom: 0;">
 
         <div class="fly-panel-title fly-filter">
-          <a href="" class="layui-this">综合</a>
+          <a href="/index" <#if recommend == 0>class="layui-this"</#if>>综合</a>
           <span class="fly-mid"></span>
-          <a href="">未结</a>
-          <span class="fly-mid"></span>
-          <a href="">已结</a>
-          <span class="fly-mid"></span>
-          <a href="">精华</a>
+<#--          <a href="">未结</a>-->
+<#--          <span class="fly-mid"></span>-->
+<#--          <a href="">已结</a>-->
+<#--          <span class="fly-mid"></span>-->
+          <a href="/index?recommend=1" <#if recommend == 1>class="layui-this"</#if>>精华</a>
           <span class="fly-filter-right layui-hide-xs">
-            <a href="" class="layui-this">按最新</a>
+            <a href="/index?order=created<#if recommend == 1>&recommend=1</#if>" <#if order == "created">class="layui-this"</#if>>按最新</a>
             <span class="fly-mid"></span>
-            <a href="">按热议</a>
+            <a href="/index?order=comment_count<#if recommend == 1>&recommend=1</#if>" <#if order == "comment_count">class="layui-this"</#if>>按热议</a>
           </span>
         </div>
 
