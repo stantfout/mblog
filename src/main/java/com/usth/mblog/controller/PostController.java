@@ -8,21 +8,15 @@ import com.usth.mblog.common.lang.Result;
 import com.usth.mblog.config.RabbitConfig;
 import com.usth.mblog.entity.*;
 import com.usth.mblog.search.mq.PostMqIndexMessage;
-import com.usth.mblog.service.UserService;
 import com.usth.mblog.util.ValidationUtil;
 import com.usth.mblog.vo.CommentVo;
 import com.usth.mblog.vo.PostVo;
-import javafx.geometry.Pos;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.collections.MapUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
-import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
-import sun.plugin2.message.Message;
 
-import javax.xml.crypto.Data;
 import java.util.Date;
 
 @Slf4j
