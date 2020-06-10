@@ -22,7 +22,6 @@ public class MvcConfig implements WebMvcConfigurer {
         return new ModelMapper();
     }
 
-
     /**
      * 配置上传路径
      * @param registry

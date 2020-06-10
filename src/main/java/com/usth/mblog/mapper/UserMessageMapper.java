@@ -21,5 +21,11 @@ import org.springframework.stereotype.Component;
 @Component
 public interface UserMessageMapper extends BaseMapper<UserMessage> {
 
+    /**
+     * 查询用户消息
+     * @param page
+     * @param wrapper
+     * @return
+     */
     IPage<UserMessageVo> selectMessages(Page page,@Param(Constants.WRAPPER) QueryWrapper<UserMessage> wrapper);
 }

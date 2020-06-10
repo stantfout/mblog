@@ -9,6 +9,9 @@ import org.springframework.data.elasticsearch.annotations.FieldType;
 import java.io.Serializable;
 import java.util.Date;
 
+/**
+ * 搜索信息的实体类
+ */
 @Data
 @Document(indexName = "post", type = "post")
 public class PostDocument implements Serializable {

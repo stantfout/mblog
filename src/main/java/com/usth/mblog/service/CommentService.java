@@ -20,6 +20,7 @@ import java.util.List;
 public interface CommentService extends IService<Comment> {
 
     /**
+     * 分页查询
      * @param page 分页
      * @param postId 文章id
      * @param userId 用户id
@@ -28,5 +29,10 @@ public interface CommentService extends IService<Comment> {
      */
     IPage<CommentVo> paging(Page page, Long postId, Long userId, String order);
 
+    /**
+     * 评论列表(用户个人中心展示最近的评论)
+     * @param wrapper
+     * @return
+     */
     List<CommentVo> commentList(QueryWrapper<Comment> wrapper);
 }

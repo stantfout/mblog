@@ -1,5 +1,4 @@
 package com.usth.mblog.controller;
-import	java.util.ArrayList;
 
 import java.io.IOException;
 import	java.util.Date;
@@ -19,7 +18,6 @@ import com.usth.mblog.entity.Post;
 import com.usth.mblog.entity.User;
 import com.usth.mblog.entity.UserMessage;
 import com.usth.mblog.shiro.AccountProfile;
-import com.usth.mblog.util.RedisUtil;
 import com.usth.mblog.util.UploadUtil;
 import com.usth.mblog.vo.CommentVo;
 import com.usth.mblog.vo.UserMessageVo;
@@ -35,6 +33,10 @@ public class UserController extends BaseController{
     @Autowired
     UploadUtil uploadUtils;
 
+    /**
+     * 用户首页
+     * @return
+     */
     @GetMapping("/user/home")
     public String home() {
 
@@ -57,6 +59,10 @@ public class UserController extends BaseController{
         return "user/home";
     }
 
+    /**
+     * 用户设置
+     * @return
+     */
     @GetMapping("/user/set")
     public String set() {
         User user = userService.getById(getProfileId());
@@ -64,6 +70,11 @@ public class UserController extends BaseController{
         return "user/set";
     }
 
+    /**
+     * 修改用户设置
+     * @param user
+     * @return
+     */
     @PostMapping("/user/set")
     @ResponseBody
     public Result doSet(User user) {
@@ -106,12 +117,25 @@ public class UserController extends BaseController{
     }
 
 
+    /**
+     * 上传头像
+     * @param file
+     * @return
+     * @throws IOException
+     */
     @PostMapping("/user/upload")
     @ResponseBody
     public Result uploadAvatar(@RequestParam(value = "file") MultipartFile file) throws IOException {
         return uploadUtils.upload(UploadUtil.type_avatar,file);
     }
 
+    /**
+     * 修改密码
+     * @param nowpass
+     * @param pass
+     * @param repass
+     * @return
+     */
     @PostMapping("/user/repass")
     @ResponseBody
     public Result repass(String nowpass, String pass, String repass) {
@@ -131,11 +155,19 @@ public class UserController extends BaseController{
         return Result.success().action("/user/set#pass");
     }
 
+    /**
+     * 用户首页
+     * @return
+     */
     @GetMapping("/user/index")
     public String index() {
         return "user/index";
     }
 
+    /**
+     * 用户发布的文章
+     * @return
+     */
     @GetMapping("/user/public")
     @ResponseBody
     public Result userPublic() {
@@ -147,6 +179,10 @@ public class UserController extends BaseController{
         return Result.success(page);
     }
 
+    /**
+     * 用户收藏
+     * @return
+     */
     @GetMapping("/user/collection")
     @ResponseBody
     public Result userCollection() {
@@ -157,6 +193,10 @@ public class UserController extends BaseController{
         return Result.success(page);
     }
 
+    /**
+     * 用户收到的消息
+     * @return
+     */
     @GetMapping("/user/message")
     public String message() {
 
@@ -168,6 +208,11 @@ public class UserController extends BaseController{
         return "user/message";
     }
 
+    /**
+     * 查看用户信息
+     * @param id
+     * @return
+     */
     @GetMapping("/user/{id:\\d*}")
     public String userHome(@PathVariable Long id) {
         User user = userService.getById(id);
@@ -182,6 +227,12 @@ public class UserController extends BaseController{
         return "user/home";
     }
 
+    /**
+     * 删除消息
+     * @param id
+     * @param all
+     * @return
+     */
     @PostMapping("/message/remove")
     @ResponseBody
     public Result messageRemove(@RequestParam(defaultValue = "0") Long id,@RequestParam(defaultValue = "false") Boolean all) {
@@ -192,6 +243,10 @@ public class UserController extends BaseController{
         return res ? Result.success() : Result.failed("删除失败");
     }
 
+    /**
+     * 未读消息数量
+     * @return
+     */
     @ResponseBody
     @RequestMapping("/message/nums")
     public Map messageNums() {

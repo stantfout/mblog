@@ -14,7 +14,7 @@ import javax.servlet.ServletContext;
 import java.util.List;
 
 /**
- * 初始化
+ * 项目初始化
  */
 @Component
 public class ContextStartup implements ApplicationRunner, ServletContextAware {
@@ -33,7 +33,7 @@ public class ContextStartup implements ApplicationRunner, ServletContextAware {
         List<Category> categories = categoryService.list(new QueryWrapper<Category>().eq("status", 0));
         servletContext.setAttribute("categories", categories);
 
-        //postService.initWeekRank();
+        postService.initWeekRank();
     }
 
     @Override

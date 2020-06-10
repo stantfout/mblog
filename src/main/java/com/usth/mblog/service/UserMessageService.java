@@ -17,5 +17,11 @@ import com.usth.mblog.vo.UserMessageVo;
  */
 public interface UserMessageService extends IService<UserMessage> {
 
+    /**
+     * 分页查询用户消息
+     * @param page
+     * @param wrapper
+     * @return
+     */
     IPage<UserMessageVo> paging(Page page, QueryWrapper<UserMessage> wrapper);
 }

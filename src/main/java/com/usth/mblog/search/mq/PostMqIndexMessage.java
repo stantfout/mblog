@@ -5,6 +5,9 @@ import lombok.Data;
 
 import java.io.Serializable;
 
+/**
+ * 消息队列的消息实体类
+ */
 @Data
 @AllArgsConstructor
 public class PostMqIndexMessage implements Serializable {

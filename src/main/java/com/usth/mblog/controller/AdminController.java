@@ -40,13 +40,10 @@ public class AdminController extends BaseController {
                 .eq("status",0));
         Assert.notNull(post,"该文章已被删除了");
         if (field.equals("delete")) {
-            //删除
             deletePost(post);
         } else if (field.equals("stick")) {
-            //置顶
             stickPost(post,rank);
         } else if(field.equals("status")) {
-            //加精
             statusPost(post,rank);
         } else {
             return Result.failed("操作不支持");
@@ -55,6 +52,11 @@ public class AdminController extends BaseController {
         return Result.success();
     }
 
+    /**
+     * 评论设为精华
+     * @param id
+     * @return
+     */
     @PostMapping("/accept")
     @ResponseBody
     public Result accept(Long id){
@@ -86,6 +88,11 @@ public class AdminController extends BaseController {
         return Result.success();
     }
 
+    /**
+     * 删除评论
+     * @param id
+     * @return
+     */
     @PostMapping("/delete")
     @ResponseBody
     @Transactional
@@ -128,6 +135,11 @@ public class AdminController extends BaseController {
         return Result.success();
     }
 
+    /**
+     * 删除文章
+     * @param post
+     * @return
+     */
     private Result deletePost(Post post) {
 
         postService.update(new UpdateWrapper<Post>()
@@ -145,18 +157,34 @@ public class AdminController extends BaseController {
         return Result.success();
     }
 
+    /**
+     * 置顶文章
+     * @param post
+     * @param rank
+     * @return
+     */
     private Result stickPost(Post post, Integer rank) {
         post.setLevel(rank);
         postService.updateById(post);
         return Result.success();
     }
 
+    /**
+     * 精华文章
+     * @param post
+     * @param rank
+     * @return
+     */
     private Result statusPost(Post post, Integer rank) {
         post.setRecommend(rank == 1);
         postService.updateById(post);
         return Result.success();
     }
 
+    /**
+     * 初始化Es数据
+     * @return
+     */
     @PostMapping("/initEsData")
     @ResponseBody
     public Result initEsData() {

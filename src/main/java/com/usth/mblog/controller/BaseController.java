@@ -3,7 +3,6 @@ package com.usth.mblog.controller;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.usth.mblog.service.*;
 import com.usth.mblog.shiro.AccountProfile;
-import com.usth.mblog.util.RedisUtil;
 import org.apache.shiro.SecurityUtils;
 import org.springframework.amqp.core.AmqpTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,6 +49,10 @@ public class BaseController {
     @Autowired
     AmqpTemplate amqpTemplate;
 
+    /**
+     * 获取分页信息
+     * @return
+     */
     public Page getPage() {
         //获取当前分页，通过ServletRequestUtils当获取不到时默认为1
         int pn = ServletRequestUtils.getIntParameter(request, "pn", 1);

@@ -15,7 +15,18 @@ import com.usth.mblog.shiro.AccountProfile;
  */
 public interface UserService extends IService<User> {
 
+    /**
+     * 注册
+     * @param user
+     * @return
+     */
     Result register(User user);
 
+    /**
+     * 登入
+     * @param email
+     * @param password
+     * @return
+     */
     AccountProfile login(String email, String password);
 }

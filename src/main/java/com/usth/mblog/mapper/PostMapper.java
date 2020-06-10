@@ -22,8 +22,18 @@ import org.springframework.stereotype.Component;
 @Component
 public interface PostMapper extends BaseMapper<Post> {
 
-    //获取分页的文章信息
+    /**
+     * 获取分页的文章信息
+     * @param page
+     * @param wrapper
+     * @return
+     */
     IPage<PostVo> selectPosts(Page page, @Param(Constants.WRAPPER) QueryWrapper wrapper);
-    //获取单个文章信息
+
+    /**
+     * 获取单个文章信息
+     * @param wrapper
+     * @return
+     */
     PostVo selectOnePost(@Param(Constants.WRAPPER) QueryWrapper<Post> wrapper);
 }

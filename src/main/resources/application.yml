@@ -30,3 +30,5 @@ spring:
 file:
   upload:
     dir: ${user.dir}/upload
+server:
+  port: 8086

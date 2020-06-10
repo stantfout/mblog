@@ -8,6 +8,9 @@ import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+/**
+ * 消息队列监听者
+ */
 @Slf4j
 @Component
 @RabbitListener(queues = RabbitConfig.es_queue)

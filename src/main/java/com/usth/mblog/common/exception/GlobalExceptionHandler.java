@@ -11,10 +11,21 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
+/**
+ * 全局异常处理类
+ */
 @Slf4j
 @ControllerAdvice
 public class GlobalExceptionHandler {
 
+    /**
+     *  拦截异常方法
+     * @param request
+     * @param response
+     * @param e 拦截的异常
+     * @return
+     * @throws IOException
+     */
     @ExceptionHandler(value = Exception.class)
     public ModelAndView handler(HttpServletRequest request, HttpServletResponse response, Exception e) throws IOException {
         // ajax 处理

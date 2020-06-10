@@ -12,6 +12,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 @Controller
 public class IndexController extends BaseController{
 
+    /**
+     * 首页
+     * @param order 排序规则(默认按照时间排序)
+     * @param recommend 是否只选择精华文章
+     * @return
+     */
     @RequestMapping({"/","/index"})
     public String index(@RequestParam(defaultValue = "created")String order,
                         @RequestParam(defaultValue = "0")Integer recommend) {
@@ -26,6 +32,11 @@ public class IndexController extends BaseController{
         return "index";
     }
 
+    /**
+     * 搜索功能
+     * @param q
+     * @return
+     */
     @RequestMapping("/search")
     public String search(String q) {
 

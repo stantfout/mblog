@@ -4,6 +4,9 @@ import lombok.Data;
 
 import java.io.Serializable;
 
+/**
+ * AJAX请求返回结果
+ */
 @Data
 public class Result implements Serializable {
 

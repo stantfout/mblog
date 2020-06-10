@@ -27,6 +27,11 @@ public class AuthController extends BaseController {
     @Autowired
     Producer producer;
 
+    /**
+     * 图片验证码
+     * @param response
+     * @throws IOException
+     */
     @GetMapping("/captcha.jpg")
     public void kaptcha(HttpServletResponse response) throws IOException {
 

@@ -14,6 +14,12 @@ import java.io.IOException;
 @Slf4j
 public class AuthFilter extends UserFilter {
 
+    /**
+     * 自定义身份信息检测
+     * @param request
+     * @param response
+     * @throws IOException
+     */
     @Override
     protected void redirectToLogin(ServletRequest request, ServletResponse response) throws IOException {
         HttpServletRequest httpServletRequest = (HttpServletRequest) request;

@@ -29,6 +29,13 @@ import java.util.Date;
 @Controller
 public class PostController extends BaseController {
 
+    /**
+     * 分类信息
+     * @param id 分类Id
+     * @param order 排序规则(默认按照时间排序)
+     * @param recommend 是否只选择精华文章
+     * @return
+     */
     @GetMapping("/category/{id:\\d*}")
     public String category(@PathVariable Long id,
                            @RequestParam(defaultValue = "created")String order,
@@ -46,6 +53,11 @@ public class PostController extends BaseController {
         return "post/category";
     }
 
+    /**
+     * 文章详细信息
+     * @param id
+     * @return
+     */
     @GetMapping("/post/{id:\\d*}")
     public String detail(@PathVariable Long id) {
         //根据文章Id获取文章信息
@@ -78,6 +90,11 @@ public class PostController extends BaseController {
         return Result.success(MapUtil.of("collection", count > 0));
     }
 
+    /**
+     * 添加收藏
+     * @param pid
+     * @return
+     */
     @PostMapping("/collection/add/")
     @ResponseBody
     public Result addCollection(Long pid){
@@ -101,6 +118,11 @@ public class PostController extends BaseController {
         return Result.success();
     }
 
+    /**
+     * 取消收藏
+     * @param pid
+     * @return
+     */
     @PostMapping("/collection/remove/")
     @ResponseBody
     public Result removeCollection(Long pid){
@@ -116,6 +138,11 @@ public class PostController extends BaseController {
         return Result.success();
     }
 
+    /**
+     * 编辑文章
+     * @param id
+     * @return
+     */
     @GetMapping("/post/edit")
     public String edit(@RequestParam(required = false) Long id) {
         if (id != null) {
@@ -130,6 +157,12 @@ public class PostController extends BaseController {
         return "post/edit";
     }
 
+    /**
+     * 创建文章
+     * @param post
+     * @param vercode 验证码
+     * @return
+     */
     @PostMapping("/post/submit")
     @ResponseBody
     public Result submitPost(Post post, String vercode) {
@@ -174,6 +207,11 @@ public class PostController extends BaseController {
         return Result.success().action("/post/"+post.getId());
     }
 
+    /**
+     * 删除文章
+     * @param id
+     * @return
+     */
     @PostMapping("/post/delete")
     @ResponseBody
     @Transactional
@@ -201,6 +239,12 @@ public class PostController extends BaseController {
         return Result.success().action("/user/index");
     }
 
+    /**
+     * 回复文章
+     * @param pid
+     * @param content
+     * @return
+     */
     @PostMapping("/post/reply")
     @ResponseBody
     public Result reply(@RequestParam("jid") Long pid, String content) {
@@ -267,7 +311,6 @@ public class PostController extends BaseController {
         wsService.sendMessageCountToUser(message.getToUserId());
 
         return Result.success().action("/post/" + pid);
-
     }
 
 }

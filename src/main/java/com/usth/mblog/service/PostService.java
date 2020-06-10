@@ -54,5 +54,8 @@ public interface PostService extends IService<Post> {
      */
     void putViewCount(PostVo vo);
 
+    /**
+     * 更新每周热评
+     */
     void updateWeekRank();
 }
