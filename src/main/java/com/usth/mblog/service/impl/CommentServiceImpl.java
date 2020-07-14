@@ -3,6 +3,7 @@ package com.usth.mblog.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.sun.org.apache.regexp.internal.RE;
 import com.usth.mblog.entity.Comment;
 import com.usth.mblog.entity.Post;
 import com.usth.mblog.mapper.CommentMapper;
@@ -40,11 +41,15 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
 
     @Override
     public IPage<CommentVo> paging(Page page, Long postId, Long userId, String order) {
-        return CommentMapper.selectComments(page,new QueryWrapper<Comment>()
-                .eq(postId != null, "post_id",postId)
-                .eq(userId != null, "user_id",userId)
-                .eq("c.status",0)
+        IPage<CommentVo> comments = CommentMapper.selectComments(page, new QueryWrapper<Comment>()
+                .eq(postId != null, "post_id", postId)
+                .eq("c.status", 0)
                 .orderByAsc(order != null, order));
+        for (CommentVo commentVo : comments.getRecords()) {
+            commentVo.setIsZan(getZanState(commentVo.getId(),userId));
+            commentVo.setVoteUp(getZanCount(commentVo.getId()));
+        }
+        return comments;
     }
 
     @Override
@@ -74,4 +79,27 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
         }
         return comments;
     }
+
+    @Override
+    public boolean zan(boolean ok, Long commentId, Long userId) {
+        String zanKey = RedisKeyUtil.getZanKey(commentId);
+        long res;
+        if (ok) {
+            res = redisUtil.setRemove(zanKey,userId);
+        } else {
+            res = redisUtil.sSet(zanKey,userId);
+        }
+        return res > 0;
+    }
+
+    private boolean getZanState(Long commentId, Long userId) {
+        String zanKey = RedisKeyUtil.getZanKey(commentId);
+        return redisUtil.sHasKey(zanKey, userId);
+    }
+
+    private int getZanCount(Long commentId) {
+        String zanKey = RedisKeyUtil.getZanKey(commentId);
+        return (int) redisUtil.sGetSetSize(zanKey);
+    }
+
 }

@@ -257,4 +257,18 @@ public class UserController extends BaseController{
 
     }
 
+    /**
+     * 点赞
+     * @param ok
+     * @param commentId
+     * @return
+     */
+    @ResponseBody
+    @PostMapping("/zan")
+    public Result zan(boolean ok, @RequestParam(name = "id") long commentId) {
+        boolean res = commentService.zan(ok,commentId,getProfileId());
+        return res ? Result.success() : Result.failed("操作失败");
+    }
+
+
 }

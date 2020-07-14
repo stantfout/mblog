@@ -107,8 +107,11 @@
                                     ${comment.content}
                                 </div>
                                 <div class="jieda-reply">
-                                    <#--<span class="jieda-zan zanok" type="zan">-->
-                                    <span class="jieda-zan" type="zan">
+                                    <#if comment.isZan>
+                                        <span class="jieda-zan zanok" type="zan">
+                                    <#else>
+                                        <span class="jieda-zan" type="zan">
+                                    </#if>
                                          <i class="iconfont icon-zan"></i>
                                          <em>${comment.voteUp}</em>
                                     </span>

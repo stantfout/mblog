@@ -8,6 +8,7 @@ public class CommentVo extends Comment {
     private Long authorId;
     private String authorName;
     private String authorAvatar;
+    private Boolean isZan;
 
     private String postTitle;
 }

@@ -8,10 +8,13 @@ import com.usth.mblog.common.lang.Result;
 import com.usth.mblog.config.RabbitConfig;
 import com.usth.mblog.entity.*;
 import com.usth.mblog.search.mq.PostMqIndexMessage;
+import com.usth.mblog.util.RedisKeyUtil;
+import com.usth.mblog.util.RedisUtil;
 import com.usth.mblog.util.ValidationUtil;
 import com.usth.mblog.vo.CommentVo;
 import com.usth.mblog.vo.PostVo;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
@@ -23,6 +26,8 @@ import java.util.Date;
 @Controller
 public class PostController extends BaseController {
 
+    @Autowired
+    RedisUtil redisUtil;
     /**
      * 分类信息
      * @param id 分类Id
@@ -61,8 +66,14 @@ public class PostController extends BaseController {
         Assert.notNull(vo,"文章已经被删除");
         postService.putViewCount(vo);
 
+        Long userId;
+        if (getProfile() == null) {
+            userId = null;
+        } else {
+            userId = getProfileId();
+        }
         //获取分页的评论信息
-        IPage<CommentVo> result = commentService.paging(getPage(),vo.getId(),null,"created");
+        IPage<CommentVo> result = commentService.paging(getPage(),vo.getId(),userId,"created");
 
         request.setAttribute("currentCategoryId",vo.getCategoryId());
         request.setAttribute("post",vo);
@@ -193,6 +204,9 @@ public class PostController extends BaseController {
             tempPost.setContent(post.getContent());
             tempPost.setCategoryId(post.getCategoryId());
             postService.updateById(tempPost);
+
+            String postKey = RedisKeyUtil.getPostKey(post.getId());
+            redisUtil.hset(postKey,RedisKeyUtil.getPostTitleKey(),post.getTitle());
         }
 
         //发送消息给MQ，告知更新或添加

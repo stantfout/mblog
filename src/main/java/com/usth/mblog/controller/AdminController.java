@@ -150,6 +150,20 @@ public class AdminController extends BaseController {
                 .eq("post_id",post.getId())
                 .set("status",1));
 
+        //发送消息
+        UserMessage message = new UserMessage();
+        message.setFromUserId((long) 0);
+        message.setToUserId(post.getUserId());
+        message.setPostId(post.getId());
+        message.setContent("您的文章：\"" + post.getTitle() + "\"被删除了");
+        message.setType(0);
+        message.setCreated(new Date());
+        message.setModified(new Date());
+        message.setStatus(0);
+        messageService.save(message);
+        //及时通知作者
+        wsService.sendMessageCountToUser(message.getToUserId());
+
         //发送消息给MQ，告知删除
         amqpTemplate.convertAndSend(RabbitConfig.es_exchange, RabbitConfig.es_bind_key,
                 new PostMqIndexMessage(post.getId(),PostMqIndexMessage.REMOVE));
@@ -166,6 +180,23 @@ public class AdminController extends BaseController {
     private Result stickPost(Post post, Integer rank) {
         post.setLevel(rank);
         postService.updateById(post);
+
+        if (rank == 1) {
+            //发送消息
+            UserMessage message = new UserMessage();
+            message.setFromUserId((long) 0);
+            message.setToUserId(post.getUserId());
+            message.setPostId(post.getId());
+            message.setContent("您的文章：\"" + post.getTitle() + "\"被置顶了");
+            message.setType(0);
+            message.setCreated(new Date());
+            message.setModified(new Date());
+            message.setStatus(0);
+            messageService.save(message);
+            //及时通知作者
+            wsService.sendMessageCountToUser(message.getToUserId());
+        }
+
         return Result.success();
     }
 
@@ -178,6 +209,22 @@ public class AdminController extends BaseController {
     private Result statusPost(Post post, Integer rank) {
         post.setRecommend(rank == 1);
         postService.updateById(post);
+
+        if (rank == 1) {
+            //发送消息
+            UserMessage message = new UserMessage();
+            message.setFromUserId((long) 0);
+            message.setToUserId(post.getUserId());
+            message.setPostId(post.getId());
+            message.setContent("您的文章：\"" + post.getTitle() + "\"被设为精华了");
+            message.setType(0);
+            message.setCreated(new Date());
+            message.setModified(new Date());
+            message.setStatus(0);
+            messageService.save(message);
+            //及时通知作者
+            wsService.sendMessageCountToUser(message.getToUserId());
+        }
         return Result.success();
     }
 

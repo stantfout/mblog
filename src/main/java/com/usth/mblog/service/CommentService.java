@@ -35,4 +35,6 @@ public interface CommentService extends IService<Comment> {
      * @return
      */
     List<CommentVo> commentList(QueryWrapper<Comment> wrapper);
+
+    boolean zan(boolean ok, Long commentId, Long userId);
 }

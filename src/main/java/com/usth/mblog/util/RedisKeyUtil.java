@@ -8,6 +8,7 @@ public class RedisKeyUtil {
     private static String POSTTITLE = "post.title";
     private static String POSTVIEWCOUNT = "post.viewCount";
     private static String WEEKRANK = "weekRank";
+    private static String ZAN = "zan";
 
     public static String getDayRankKey(String date) {
         return DAYRANK + SPLIT + date;
@@ -32,4 +33,10 @@ public class RedisKeyUtil {
     public static String getPostViewCountKey() {
         return POSTVIEWCOUNT;
     }
+
+    public static String getZanKey(Long commentId) {
+        return ZAN + SPLIT + commentId;
+    }
+
+
 }
